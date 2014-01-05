@@ -8,13 +8,12 @@ from sys import stdout
 
 
 class Watcher():
-    available = ['Materiel', 'Ldlc']
-
     def __init__(self, name):
-        if name not in self.available:
+        try:
+            self.adapter = eval(name)()
+        except NameError:
             raise Exception('No adapter for "%s"' % name)
         self.name = name
-        self.adapter = eval(name)()
 
     def fetchprices(self, urls):
         stdout.write('-- %s ' % self.name)

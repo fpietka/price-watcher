@@ -55,7 +55,7 @@ class Materiel(Adapter):
         title_1 = u''.join([s.string for s in soup.find('h1', id='ProdTitle').find('a').find_all(text=True)])[1:-1]
         title_2 = soup.find('h1', id='ProdTitle').find('span', attrs={'itemprop': 'name'}).string
         title = u''.join((title_1, title_2))
-        price = float(soup.find('div', class_='Price').find('span', attrs={'property': 'v:price'}).string.replace(',', '.'))
+        price = float(soup.find('div', class_='Price').find('span', attrs={'property': 'v:price'}).string.replace(',', '.').split(' ')[0])
         return (title, price)
 
 

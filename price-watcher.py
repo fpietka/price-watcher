@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from urllib import request
+from urllib import request, error
 from bs4 import BeautifulSoup
 
 from sys import stdout
@@ -20,8 +20,16 @@ class Watcher():
         stdout.flush()
         data = list()
         for url in urls:
-            soup = BeautifulSoup(request.urlopen(url).read())
-            data.append(self.adapter.fetch(soup))
+            try:
+                soup = BeautifulSoup(request.urlopen(url).read())
+                data.append(self.adapter.fetch(soup))
+            except TimeoutError:
+                data.append(('%s (%s)' % (url, 'timeout'), 0))
+            except error.URLError as e:
+                if hasattr(e, 'code'):
+                    data.append(('%s (%s)' % (url, e.code), 0))
+                else:
+                    data.append(('%s (%s)' % (url, 'wrong url'), 0))
             stdout.write('.')
             stdout.flush()
 
